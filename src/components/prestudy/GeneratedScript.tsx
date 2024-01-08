@@ -1,12 +1,15 @@
+import Button from "../common/Button";
+import Title from "../common/Title";
+
 function GeneratedScript() {
   return (
     <section>
-      <h2>실행 결과</h2>
-      <article>
+      <Title label="실행 결과" />
+      <Button label="Copy" />
+      <Button label="Highlight" />
+      <article className="border border-gray-300 rounded-md p-[16px]">
         <p>blah blah</p>
       </article>
-      <button>Copy</button>
-      <button>Highlight</button>
     </section>
   );
 }
