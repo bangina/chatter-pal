@@ -1,0 +1,5 @@
+export const enum GeneratingType {
+  GRAMMAR = "GRAMMAR",
+  VOCABULARY = "VOCABULARY",
+  CONVERSATIONAL = "CONVERSATIONAL",
+}
