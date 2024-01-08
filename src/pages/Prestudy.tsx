@@ -6,15 +6,14 @@ import MyScript from "../components/prestudy/MyScript";
 import { generatedScriptState, myScriptState } from "../recoil";
 import { useState } from "react";
 import { GeneratingType } from "../types/prestudy";
-
 const systemMessage = (type: GeneratingType) => {
   switch (type) {
     case GeneratingType.GRAMMAR:
-      return "Please correct grammar errors of the answer provided.";
+      return "Please correct grammar errors from my script provided above. I want the output to be like below; (1) full rewritten script(corrected texts should be font-weight 700 and red color text.) (2) bullet-point format list of grammar errors you corrected and detailed explanation on why each were corrected.";
     case GeneratingType.VOCABULARY:
-      return "Rewrite it with more sophisticated, diverse, and professional vocabulary.";
+      return "Rewrite the answer provided above with more sophisticated, diverse, and professional vocabulary.";
     case GeneratingType.CONVERSATIONAL:
-      return "Rewrite a suitable version for verbal communication.";
+      return "Rewrite the answer provided above a suitable version for verbal communication.";
   }
 };
 function Prestudy() {
@@ -36,7 +35,7 @@ function Prestudy() {
         },
         {
           role: "user",
-          content,
+          content: `[MY SCRIPT starts] ${content} [MY SCRIPT ends]`,
         },
       ],
       model: "gpt-3.5-turbo",

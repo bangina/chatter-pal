@@ -5,7 +5,6 @@ const openAIClient = new OpenAI({
   apiKey: OPENAI_API_KEY,
   dangerouslyAllowBrowser: true,
   maxRetries: 1,
-  timeout: 10000,
 });
 
 export default openAIClient;

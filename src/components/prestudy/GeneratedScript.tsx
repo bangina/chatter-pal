@@ -11,7 +11,7 @@ function GeneratedScript() {
       <Title label="실행 결과" />
       <Button label="Copy" />
       <Button label="Highlight" />
-      <article className="border border-gray-300 rounded-md p-[16px]">
+      <article className="border border-gray-300 rounded-md p-[16px] whitespace-pre-line">
         <p>{generatedScript}</p>
       </article>
     </section>
