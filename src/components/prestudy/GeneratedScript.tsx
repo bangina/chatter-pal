@@ -7,10 +7,7 @@ function GeneratedScript() {
   const parsedScript = (script: string) => {
     if (!script.includes("[original_starts]")) return script;
     return script
-      .replaceAll(
-        "[item_starts]",
-        "<li style='margin-bottom: 12px;'>"
-      )
+      .replaceAll("[item_starts]", "<li style='margin-bottom: 12px;'>")
       .replaceAll("[item_ends]", "</li>")
       .replaceAll(
         "[original_starts]",
@@ -25,19 +22,34 @@ function GeneratedScript() {
       )
       .replaceAll("[explanation_ends]", "</p>");
   };
+  const handleClickCopy = async (script: string) => {
+    try {
+      await navigator.clipboard.writeText(script);
+      alert("복사되었습니다.");
+    } catch (error) {
+      alert("복사에 실패했습니다.");
+    }
+  };
   console.log(generatedScript);
   return (
     <section>
       <Title label="실행 결과" />
-      <Button label="Copy" />
-      <Button label="Highlight" />
-      <article className="border border-gray-300 rounded-md p-[16px] text-[14px] tracking-tight">
-        {generatedScript && (
-          <ul
-            dangerouslySetInnerHTML={{ __html: parsedScript(generatedScript) }}
+      {generatedScript !== "" && (
+        <>
+          <Button
+            label="Copy"
+            onClick={() => handleClickCopy(generatedScript)}
           />
-        )}
-      </article>
+          <Button label="Highlight" />
+          <article className="border border-gray-300 rounded-md p-[16px] text-[14px] tracking-tight">
+            <ul
+              dangerouslySetInnerHTML={{
+                __html: parsedScript(generatedScript),
+              }}
+            />
+          </article>
+        </>
+      )}
     </section>
   );
 }

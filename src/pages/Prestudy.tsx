@@ -64,7 +64,9 @@ function Prestudy() {
         content: myScript,
         type: generatingType,
       });
-      setGeneratedScript(chatCompletion.choices[0].message.content);
+      if (chatCompletion.choices[0].message.content !== null) {
+        setGeneratedScript(chatCompletion.choices[0].message.content);
+      }
     } catch (error) {
       console.error(error);
     } finally {

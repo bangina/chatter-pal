@@ -5,9 +5,9 @@ const atomWithSessionStorage = ({
   defaultVal,
 }: {
   key: string;
-  defaultVal: string | null;
+  defaultVal: string;
 }) => {
-  return atom<string | null>({
+  return atom<string>({
     key,
     default: defaultVal,
     effects: [
