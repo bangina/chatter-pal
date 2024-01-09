@@ -4,41 +4,58 @@ import Title from "../common/Title";
 import { generatedScriptState } from "../../recoil";
 import openAIClient from "../../api/openai/openAIClient";
 import { useState } from "react";
+const parseScript = (script: string) => {
+  const replacements = [
+    {
+      searchFor: "[item_starts]",
+      replaceWith: "<li style='margin-bottom: 12px;'>",
+    },
+    { searchFor: "[item_ends]", replaceWith: "</li>" },
+    {
+      searchFor: "[original_starts]",
+      replaceWith: "<span style='color:red; text-decoration:line-through'>",
+    },
+    { searchFor: "[original_ends]", replaceWith: "</span>" },
+    {
+      searchFor: "[corrected_starts]",
+      replaceWith: "<span style='color:green'>",
+    },
+    { searchFor: "[corrected_ends]", replaceWith: "</span>" },
+    {
+      searchFor: "[key_starts]",
+      replaceWith: "<span style='font-weight:600'>",
+    },
+    { searchFor: "[key_ends]", replaceWith: "</span>" },
+    {
+      searchFor: "[changed_starts]",
+      replaceWith: "<span style='color:green'>",
+    },
+    { searchFor: "[changed_ends]", replaceWith: "</span>" },
+    {
+      searchFor: "[explanation_starts]",
+      replaceWith: "<p style='font-style:italic; margin-bottom: 12px;'> ➡ ",
+    },
+    { searchFor: "[explanation_ends]", replaceWith: "</p>" },
+  ];
+
+  return replacements.reduce((text, { searchFor, replaceWith }) => {
+    return text.replaceAll(searchFor, replaceWith);
+  }, script);
+};
+const copyToClipboard = async (script: string) => {
+  try {
+    await navigator.clipboard.writeText(script);
+    alert("복사되었습니다.");
+  } catch (error) {
+    alert("복사에 실패했습니다.");
+  }
+};
 
 function GeneratedScript() {
   const generatedScript = useRecoilValue(generatedScriptState);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const parsedScript = (script: string) => {
-    if (!script.includes("[original_starts]")) return script;
-    return script
-      .replaceAll("[item_starts]", "<li style='margin-bottom: 12px;'>")
-      .replaceAll("[item_ends]", "</li>")
-      .replaceAll(
-        "[original_starts]",
-        "<span style='color:red; text-decoration:line-through'>"
-      )
-      .replaceAll("[original_ends]", "</span>")
-      .replaceAll("[corrected_starts]", "<span style='color:green'>")
-      .replaceAll("[corrected_ends]", "</span>")
-      .replaceAll("[key_starts]", "<span style='font-weight:600'>")
-      .replaceAll("[key_ends]", "</span>")
-      .replaceAll("[changed_starts]", "<span style='color:green'>")
-      .replaceAll("[changed_ends]", "</span>")
-      .replaceAll(
-        "[explanation_starts]",
-        "<p style='font-style:italic; margin-bottom: 12px;'> ➡ "
-      )
-      .replaceAll("[explanation_ends]", "</p>");
-  };
-  const handleClickCopy = async (script: string) => {
-    try {
-      await navigator.clipboard.writeText(script);
-      alert("복사되었습니다.");
-    } catch (error) {
-      alert("복사에 실패했습니다.");
-    }
-  };
+
   const playAudio = (audio: HTMLAudioElement) => {
     audio.play();
     setIsPlaying(true);
@@ -81,7 +98,6 @@ function GeneratedScript() {
     // store the audio in the sessionstorage so that it can be replayed without making another request
     sessionStorage.setItem("audio", audioURL);
   };
-  console.log(generatedScript);
 
   return (
     <section>
@@ -90,7 +106,7 @@ function GeneratedScript() {
         <>
           <Button
             label="Copy"
-            onClick={() => handleClickCopy(generatedScript)}
+            onClick={() => copyToClipboard(generatedScript)}
           />
           <Button
             label={isPlaying ? "멈춤" : "읽어주세요"}
@@ -99,7 +115,7 @@ function GeneratedScript() {
           <article className="border border-gray-300 rounded-md p-[16px] text-[14px] tracking-tight">
             <ul
               dangerouslySetInnerHTML={{
-                __html: parsedScript(generatedScript),
+                __html: parseScript(generatedScript),
               }}
             />
           </article>
