@@ -16,6 +16,10 @@ function GeneratedScript() {
       .replaceAll("[original_ends]", "</span>")
       .replaceAll("[corrected_starts]", "<span style='color:green'>")
       .replaceAll("[corrected_ends]", "</span>")
+      .replaceAll("[key_starts]", "<span style='font-weight:600'>")
+      .replaceAll("[key_ends]", "</span>")
+      .replaceAll("[changed_starts]", "<span style='color:green'>")
+      .replaceAll("[changed_ends]", "</span>")
       .replaceAll(
         "[explanation_starts]",
         "<p style='font-style:italic; margin-bottom: 12px;'> ➡ "
@@ -40,7 +44,6 @@ function GeneratedScript() {
             label="Copy"
             onClick={() => handleClickCopy(generatedScript)}
           />
-          <Button label="Highlight" />
           <article className="border border-gray-300 rounded-md p-[16px] text-[14px] tracking-tight">
             <ul
               dangerouslySetInnerHTML={{

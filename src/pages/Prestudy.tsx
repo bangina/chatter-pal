@@ -13,19 +13,44 @@ const systemMessage = (type: GeneratingType) => {
       I want the output to be like below, so that I can parse the output easily. 
       (1)each sentence starts with [item_starts] and ends with [item_ends].
       (2)if there are no grammar errors in a sentence, please write "no error".
-      (2)original words that should be corrected starts with [original_starts] and ends with [original_ends].
-      (3)corrected words should be in [corrected_starts] and ends with [corrected_ends].
-      (4)corrected words should be attached to the original words in the original sentence.
-      (4)explanation on why each were corrected should be in [explanation_starts] and ends with [explanation_ends].
+      (2)original words that should be changed/corrected starts with [original_starts] and ends with [original_ends].
+      (3)changed/corrected words should be in [changed_starts] and ends with [changed_ends].
+      (4)changed/corrected words should be attached to the original words in the original sentence.
+      (4)explanation on why each were changed/corrected should be in [explanation_starts] and ends with [explanation_ends].
       (5)no line break should be used.
-      (6)if there are multiple errors in a sentence, please correct them all.
+      (6)if there are multiple errors in a sentence, please changed/correct them all.
       
       for example the output is like below;, 
-      [item_starts] I didn’t take it seriously because I assumed that [original_starts]it's[original_ends] [corrected_starts]it was[corrected_ends] just one of the common problems \n
+      [item_starts] I didn’t take it seriously because I assumed that [original_starts]it's[original_ends] [changed_starts]it was[corrected_ends] just one of the common problems \n
       [explanation_starts]the verb should be in past tense because the sentence is in past tense. Since the author is referring to a past event, "assumed" in the previous sentence is also in the past tense. [explanation_ends] [item_ends]
       "`;
     case GeneratingType.VOCABULARY:
-      return "Rewrite the answer provided above with more sophisticated, diverse, and professional vocabulary.";
+      return `"Rewrite the answer provided above with more sophisticated, diverse, and professional vocabulary."
+      I want the output to be like below, so that I can parse the output easily. 
+      (1)each sentence should start with [item_starts] and ends with [item_ends].
+      (2)original sentence should start with [original_starts] and ends with [original_ends].
+      (3)changed sentence should be in [changed_starts] and ends with [changed_ends].
+      (4)no line break should be used.
+      (5)key words of each sentence should be marked with [key_starts] and [key_ends]. 
+      (5-1)key words means the words that are important in the sentence, or the words that are changed/corrected, or the words that are advanced. 
+      (6)[**_starts] and [**_ends] should always be used in pairs.
+      
+      
+      
+      for example the output is like below;, 
+      [item_starts]
+      [original_starts]I didn’t really know much about the economic situation of the UK before reading this article.
+      [original_ends] 
+      [changed_starts][key_starts]Prior to[key_ends] reading this article, I [key_starts]had limited knowledge[key_ends] about the economic situation in the UK.
+      [changed_ends]
+      [item_ends]
+      [item_starts]
+      [original_starts]I was aware of the rent crisis in London, but I didn’t take it seriously because I assumed that it’s just one of the common problems that metropolitan cities are going through.
+      [original_ends] 
+      [changed_starts]While I was vaguely aware of the rent crisis in London, I didn't consider it a [key_starts]significant[key_ends] issue, assuming it was a common challenge typical of metropolitan areas.
+      [changed_ends]
+      [item_ends]
+      `;
     case GeneratingType.CONVERSATIONAL:
       return "Rewrite the answer provided above a suitable version for verbal communication.";
   }
