@@ -1,4 +1,5 @@
 import { atom } from "recoil";
+import { GeneratingType } from "../types/prestudy";
 
 const atomWithSessionStorage = ({
   key,
@@ -25,11 +26,24 @@ const atomWithSessionStorage = ({
   });
 };
 
+export const titleState = atomWithSessionStorage({
+  key: "titleState",
+  defaultVal: "",
+});
 export const myScriptState = atomWithSessionStorage({
   key: "myScriptState",
   defaultVal: "",
 });
-export const generatedScriptState = atomWithSessionStorage({
-  key: "generatedScriptState",
-  defaultVal: "",
+
+export type generatedScriptsStateType = {
+  [key in GeneratingType]: string;
+};
+
+export const generatedScriptsState = atom<generatedScriptsStateType>({
+  key: "generatedScriptsState",
+  default: {
+    [GeneratingType.GRAMMAR]: "",
+    [GeneratingType.VOCABULARY]: "",
+    [GeneratingType.CONVERSATIONAL]: "",
+  },
 });

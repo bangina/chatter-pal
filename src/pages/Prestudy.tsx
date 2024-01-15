@@ -1,10 +1,14 @@
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import openAIClient from "../api/openai/openAIClient";
 import Button from "../components/common/Button";
 import GeneratedScript from "../components/prestudy/GeneratedScript";
 import MyScript from "../components/prestudy/MyScript";
-import { generatedScriptState, myScriptState } from "../recoil";
-import { useState } from "react";
+import {
+  generatedScriptsState,
+  generatedScriptsStateType,
+  myScriptState,
+} from "../recoil";
 import { GeneratingType } from "../types/prestudy";
 const systemMessage = (type: GeneratingType) => {
   switch (type) {
@@ -58,7 +62,9 @@ const systemMessage = (type: GeneratingType) => {
 function Prestudy() {
   const [isLoading, setIsLoading] = useState(false);
   const myScript = useRecoilValue(myScriptState);
-  const setGeneratedScript = useSetRecoilState(generatedScriptState);
+  const [generatedScripts, setGeneratedScripts] = useRecoilState(
+    generatedScriptsState
+  );
   const createChatCompletion = async ({
     content,
     type,
@@ -90,7 +96,10 @@ function Prestudy() {
         type: generatingType,
       });
       if (chatCompletion.choices[0].message.content !== null) {
-        setGeneratedScript(chatCompletion.choices[0].message.content);
+        setGeneratedScripts((prev) => ({
+          ...prev,
+          [generatingType]: chatCompletion.choices[0].message.content,
+        }));
       }
     } catch (error) {
       console.error(error);
@@ -98,24 +107,51 @@ function Prestudy() {
       setIsLoading(false);
     }
   };
-
+  const createNotionPage = async (script: generatedScriptsStateType) => {
+    // TODO : parse generatedScripts to make it suitable for the notion api
+    
+    try {
+      const response = await fetch("http://localhost:4000/api/v1/notion/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: "스크립트",
+          description: script,
+          tags: "tag1",
+        }),
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <>
       <MyScript />
       {isLoading && "loading..."}
+
       <Button
         onClick={() => handleClickGenerateBtn(GeneratingType.GRAMMAR)}
-        label="문법 체크✅"
+        label="문법 체크하기 ✅"
       />
+      <GeneratedScript type={GeneratingType.GRAMMAR} />
       <Button
         onClick={() => handleClickGenerateBtn(GeneratingType.VOCABULARY)}
-        label="어휘 향상🌈"
+        label="어휘 향상하기 🌈"
       />
+      <GeneratedScript type={GeneratingType.VOCABULARY} />
       <Button
         onClick={() => handleClickGenerateBtn(GeneratingType.CONVERSATIONAL)}
-        label="대화 버전💬"
+        label="대화 버전 생성 💬"
       />
-      <GeneratedScript />
+      <GeneratedScript type={GeneratingType.CONVERSATIONAL} />
+      <Button
+        onClick={() => createNotionPage(generatedScripts)}
+        label="notion에 저장하기 📝"
+      />
     </>
   );
 }

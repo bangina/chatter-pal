@@ -1,9 +1,9 @@
-import { useRecoilValue } from "recoil";
-import Button from "../common/Button";
-import Title from "../common/Title";
-import { generatedScriptState } from "../../recoil";
-import openAIClient from "../../api/openai/openAIClient";
 import { useState } from "react";
+import { useRecoilValue } from "recoil";
+import openAIClient from "../../api/openai/openAIClient";
+import { generatedScriptsState } from "../../recoil";
+import { GeneratingType } from "../../types/prestudy";
+import Button from "../common/Button";
 const parseScript = (script: string) => {
   const replacements = [
     {
@@ -51,8 +51,8 @@ const copyToClipboard = async (script: string) => {
   }
 };
 
-function GeneratedScript() {
-  const generatedScript = useRecoilValue(generatedScriptState);
+function GeneratedScript({ type }: { type: GeneratingType }) {
+  const generatedScripts = useRecoilValue(generatedScriptsState);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -101,21 +101,20 @@ function GeneratedScript() {
 
   return (
     <section>
-      <Title label="실행 결과" />
-      {generatedScript !== "" && (
+      {generatedScripts[type] !== "" && (
         <>
           <Button
             label="Copy"
-            onClick={() => copyToClipboard(generatedScript)}
+            onClick={() => copyToClipboard(generatedScripts[type])}
           />
           <Button
             label={isPlaying ? "멈춤" : "읽어주세요"}
-            onClick={() => handleClickTTS(generatedScript)}
+            onClick={() => handleClickTTS(generatedScripts[type])}
           />
           <article className="border border-gray-300 rounded-md p-[16px] text-[14px] tracking-tight">
             <ul
               dangerouslySetInnerHTML={{
-                __html: parseScript(generatedScript),
+                __html: parseScript(generatedScripts[type]),
               }}
             />
           </article>
