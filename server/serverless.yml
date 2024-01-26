@@ -7,8 +7,14 @@ provider:
   name: aws
   runtime: nodejs18.x
   stackName: lambda-chatgpt
-  region: ap-northeast-1
+  region: ap-northeast-2
   versionFunctions: false
   deploymentBucket: my-lambda-chatgpt-deployments
   environment:
     OPENAI_API_KEY: ${env:OPENAI_API_KEY}
+
+functions:
+  getjoke:
+    handler: handler.main
+    url: true
+    

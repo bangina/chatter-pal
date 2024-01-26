@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
+.build
 
 # Editor directories and files
 .vscode/*
@@ -26,3 +27,6 @@ dist-ssr
 # env files
 .env.local
 .env
+
+# serverless zip files
+server/.serverless/*
